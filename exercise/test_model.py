@@ -8,6 +8,9 @@ import pandas as pd
 class TestSeniorityModel(unittest.TestCase):
 
     def setUp(self):
+        """ This setup is done at the beginning of all testing once since it will be used in mose of the tests.
+        Initializes job_titles, job_seniority from data and uses fit() method to train model
+        """
         self.model1 = SeniorityModel()
         
         data_dir = '../data'
@@ -24,6 +27,8 @@ class TestSeniorityModel(unittest.TestCase):
 
     
     def test_save_load(self):
+        """ Tests that predictions made by model persisted in disk is the same as the current model.
+        """
         self.model1.save(self.filename)
         self.model2 = SeniorityModel()
         self.model2.load(self.filename)
@@ -35,6 +40,8 @@ class TestSeniorityModel(unittest.TestCase):
         os.remove(self.filename + '_vectorizer.json')
 
     def test_predict(self):
+        """ Tests that the predict function is working and giving an output per job_title passed in
+        """
         job_titles = ['infrastructure manager', 'client', 'success', 'product development']
         preds = self.model1.predict(job_titles)
         
@@ -42,15 +49,19 @@ class TestSeniorityModel(unittest.TestCase):
         
         
     def test_predict_salesloft_team(self):
+        """ Tests that the ids and titles returned from api are the same lenght and that all predictions are part of original labeled data
+        """
         res = self.model1.predict_salesloft_team()
-        x, y = zip(*res)
-        x = list(x)
-        y = list(y)
-        self.assertEqual(len(set(x)), len(x))
-        for elem in y:
+        ids, titles = zip(*res)
+        ids = list(ids)
+        titles = list(titles)
+        self.assertEqual(len(set(ids)), len(ids))
+        for elem in titles:
             self.assertTrue(elem in self.job_seniority)
             
     def test_check_for_array(self):
+        """ Tests that a TypeError is raised when a value is passed in to _check_for_array that is not a list or a numpy array
+        """
         self.assertRaises(TypeError, "variable should be of type list or numpy array.", self.model1._check_for_array, 1.0)
 
             

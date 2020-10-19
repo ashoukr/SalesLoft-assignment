@@ -10,7 +10,7 @@ import requests
 
 from decouple import config
 
-def clean_transform_title(job_title):
+def clean_transform_title(job_title: list):
     """Clean and transform job title. Remove punctuations, special characters,
     multiple spaces etc.
     """
@@ -39,7 +39,7 @@ class SeniorityModel:
         return
     
     
-    def _data_check(self, job_titles, job_seniorities):
+    def _data_check(self, job_titles: list, job_seniorities: list):
         self._check_for_array(job_titles)
         self._check_for_array(job_seniorities)
         
@@ -48,7 +48,7 @@ class SeniorityModel:
         
         return
         
-    def fit(self, job_titles, job_seniorities):
+    def fit(self, job_titles: list, job_seniorities: list):
         """Fits the model to predict job seniority from job titles.
         Note that job_titles and job_seniorities must be of the same length.
         
@@ -67,7 +67,7 @@ class SeniorityModel:
         self.model.fit(vectorized_data, job_seniorities)
         
         return
-    def predict(self, job_titles):
+    def predict(self, job_titles: list):
         """ Predicts job seniority from job titles
         
         Parameters
@@ -109,7 +109,7 @@ class SeniorityModel:
         res = [(idx, pred_sen) for idx, pred_sen in zip(ids, pred_seniorities)]
         return res
     
-    def save(self, filename):
+    def save(self, filename: str):
         """ Saves model and vectorizer members of class in json format
         model saved in filename_model.json
         vectorizer saved in filename_vectorizer.json
@@ -125,7 +125,7 @@ class SeniorityModel:
         with open(filename + '_model.json', 'w') as file:
             file.write(json_model)
         
-    def load(self, filename):
+    def load(self, filename: str):
         """ Retrieves vectroizer and model using filename.
         
         Parameters
@@ -158,7 +158,7 @@ class SeniorityModel:
                 
         return json.dumps(vectorizer_dict, indent = 4)
     
-    def _deserialize_vectorizer(self, saved_dict):
+    def _deserialize_vectorizer(self, saved_dict: dict):
         """ Creates new vectorizer from saved_dict and saves it as a class member
 
         Parameters
@@ -184,7 +184,7 @@ class SeniorityModel:
 #         print([type(model_dict[x]) for x in model_dict.keys()])
         return json.dumps(model_dict, indent = 4)
     
-    def _deserialize_model(self, saved_dict):
+    def _deserialize_model(self, saved_dict: dict):
         """ Creates new model from saved_dict and saves it as a class member
 
         Parameters
